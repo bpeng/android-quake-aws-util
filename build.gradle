@@ -1,0 +1,41 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin:'application'
+
+group = 'nz.org.geonet'
+
+version = 1.0
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.9'
+}
+
+task initSourceFolders { // add << before { to prevent executing during configuration phase
+    sourceSets*.java.srcDirs*.each { it.mkdirs() }
+    sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+
+mainClassName = "nz.org.geonet.quake.EncryptHelper"
+
+jar {
+    manifest {
+        attributes "Main-Class": "$mainClassName"
+    }
+}
+
+    repositories {
+    maven {
+        credentials {
+            username geonetUser
+            password geonetPassword
+        }
+        url 'https://geonet.artifactoryonline.com/geonet/all'
+    }
+}
+
+dependencies {
+    compile 'com.sun.xml.security:xml-security-impl:1.0'
+}
